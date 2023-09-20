@@ -152,6 +152,25 @@
     INNER JOIN videogames on software_houses.id = videogames.software_house_id
     ORDER BY videogames.release_date ASC;
 
-11-
-12-
-13-
+11- SELECT TOP 1 videogames.id as game_id, videogames.release_date as game_release_date, COUNT(reviews.rating) as total_ratings
+    FROM videogames
+    INNER JOIN reviews ON videogames.id = reviews.videogame_id
+    GROUP BY videogames.id, videogames.name, videogames.release_date
+    ORDER BY COUNT(reviews.rating) DESC;
+
+12- SELECT TOP 1 software_houses.id, software_houses.name, COUNT(awards.id) as total_awards
+    FROM software_houses
+    INNER JOIN videogames ON software_houses.id = videogames.software_house_id
+    INNER JOIN award_videogame ON videogames.id = award_videogame.videogame_id
+    INNER JOIN awards ON award_videogame.award_id = awards.id
+    WHERE award_videogame.year >= 2015 AND award_videogame.year <= 2016
+    GROUP BY software_houses.id, software_houses.name
+    ORDER BY COUNT(awards.id) DESC;
+
+13- SELECT categories.name as category_name, AVG(reviews.rating) AS average_rating
+    FROM categories
+    INNER JOIN category_videogame ON categories.id = category_videogame.category_id
+    INNER JOIN videogames ON category_videogame.videogame_id = videogames.id
+    INNER JOIN reviews ON videogames.id = reviews.videogame_id
+    GROUP BY categories.name, reviews.rating
+    HAVING AVG(reviews.rating) < 2;
